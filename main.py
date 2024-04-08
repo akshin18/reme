@@ -53,7 +53,7 @@ class Terminal(FileManager, Buffer):
             f"Username: {self.data[self.edit_session].get('user')}",
             f"Host: {self.data[self.edit_session].get('host')}",
             f"Port: {self.data[self.edit_session].get('port')}",
-            f"Password: {self.data[self.edit_session].get('pwd') if not self.data[self.edit_session].get('pwd').startswith('-----BEGIN RSA PRIVATE KEY-----') else 'Private Key ...'}"
+            f"Password: {self.data[self.edit_session].get('pwd') if not self.data[self.edit_session].get('pwd').startswith('-----BEGIN RSA PRIVATE KEY-----') else 'Private Key ...'}",
         ]
 
         for zi, i in enumerate(self.session_info):
@@ -81,7 +81,7 @@ class Terminal(FileManager, Buffer):
                     self.data[self.edit_session]["port"] = info
                 elif self.edit_session_index == 4:
                     if info.endswith(".key"):
-                        with open(info,"r")as f:
+                        with open(info, "r") as f:
                             info = f.read()
                     self.data[self.edit_session]["pwd"] = info
                 self.save_data()
@@ -99,10 +99,13 @@ class Terminal(FileManager, Buffer):
                     self.edit_session_index -= 1
                     self.edit()
             elif key == curses.KEY_DOWN:
-                if self.state == 0 and self.data_index < len(self.data)-1:
+                if self.state == 0 and self.data_index < len(self.data) - 1:
                     self.data_index += 1
                     self.menu()
-                elif self.state == 2 and self.edit_session_index < len(self.session_info)-1:
+                elif (
+                    self.state == 2
+                    and self.edit_session_index < len(self.session_info) - 1
+                ):
                     self.edit_session_index += 1
                     self.edit()
             elif key == ord("\n") or key == curses.KEY_ENTER:
@@ -113,7 +116,7 @@ class Terminal(FileManager, Buffer):
                     host = session["host"]
                     port = session["port"]
                     if pwd.startswith("-----BEGIN RSA PRIVATE KEY-----"):
-                        with open("asd.key", "w")as f:
+                        with open("asd.key", "w") as f:
                             f.write(pwd)
                         os.system("chmod 600 asd.key")
                         return f"ssh -p {port} -i asd.key {user}@{host}"
@@ -155,7 +158,7 @@ class Terminal(FileManager, Buffer):
             else:
                 self.check_buffer(chr(key))
 
-    def _listen(self, text=None, cursor_y = 2):
+    def _listen(self, text=None, cursor_y=2):
         if text != None:
             self.stdscr.clear()
             self.stdscr.addstr(text)
@@ -170,7 +173,9 @@ class Terminal(FileManager, Buffer):
             if key != curses.ERR:
                 if key == curses.KEY_BACKSPACE or key == 127:
                     if cursor_x > 0:
-                        input_string = input_string[:cursor_x - 1] + input_string[cursor_x:]
+                        input_string = (
+                            input_string[: cursor_x - 1] + input_string[cursor_x:]
+                        )
                         cursor_x -= 1
                         self.stdscr.move(cursor_y, cursor_x)
                         self.stdscr.clrtoeol()
@@ -186,21 +191,21 @@ class Terminal(FileManager, Buffer):
                 elif key == 4 or key == 17:
                     return None
                 else:
-                    input_string = input_string[:cursor_x] + chr(key) + input_string[cursor_x:]
+                    input_string = (
+                        input_string[:cursor_x] + chr(key) + input_string[cursor_x:]
+                    )
                     cursor_x += 1
 
                 if text != None:
                     self.stdscr.clear()
                     self.stdscr.addstr(text)
-                self.stdscr.addstr(cursor_y,0,input_string)
+                self.stdscr.addstr(cursor_y, 0, input_string)
                 self.stdscr.refresh()
-                
-                self.stdscr.move(cursor_y, cursor_x )
+
+                self.stdscr.move(cursor_y, cursor_x)
 
             self.stdscr.refresh()
 
-
-    
     def mk(self):
         curses.curs_set(1)
 
@@ -221,7 +226,7 @@ class Terminal(FileManager, Buffer):
             port = creds_list[2].strip()
         else:
             port = "22"
-        
+
         pwd = self._listen("Password: ")
         if pwd == None:
             curses.curs_set(0)
@@ -232,22 +237,20 @@ class Terminal(FileManager, Buffer):
 
         curses.curs_set(0)
         self.menu()
-    
+
     def qw(self):
         raise KeyboardInterrupt
-    
+
     def im(self):
         curses.curs_set(1)
         file = self._listen(text="Add file path: ")
         curses.curs_set(0)
         with open(file) as f:
             read_file = f.read()
-        with open("data.json","w")as f:
+        with open("data.json", "w") as f:
             f.write(read_file)
         self.load_data()
         self.menu()
-
-        
 
 
 def main(stdscr: curses.window) -> None:
@@ -257,7 +260,8 @@ def main(stdscr: curses.window) -> None:
     terminal.main_settings()
     return terminal.monitor()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     try:
         result = wrapper(main)
         if result != None:

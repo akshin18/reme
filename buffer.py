@@ -1,7 +1,6 @@
 from manager import Manager
 
 
-
 class Buffer(Manager):
     def __init__(self):
         self.buffer = ""
@@ -11,7 +10,5 @@ class Buffer(Manager):
         self.buffer += key
         if len(self.buffer) >= 30:
             self.buffer = self.buffer[1:]
-        
+
         self.check_command()
-        
-        
