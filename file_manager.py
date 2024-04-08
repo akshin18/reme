@@ -1,25 +1,26 @@
 import json
-
+import os
 
 class FileManager:
     def __init__(self):
         self.data = None
         self.data_index = 0
+        self.cur_path = os.path.dirname(__file__)
 
     def load_data(self):
         try:
-            with open(f"data.json", "r") as f:
+            with open(f"{self.cur_path}/data.json", "r") as f:
                 self.data = json.loads(f.read())
                 self.data_index = 0
         except FileNotFoundError:
-            with open(f"data.json", "w") as f:
+            with open(f"{self.cur_path}/data.json", "w") as f:
                 f.write("{}")
             self.data = {}
         except:
             print("Something went wrong loading data.json")
 
     def save_data(self):
-        with open(f"data.json", "w") as f:
+        with open(f"{self.cur_path}/data.json", "w") as f:
             f.write(json.dumps(self.data))
 
     def push_data(self, session_name, user_name, host, port, pwd):

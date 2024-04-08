@@ -116,7 +116,7 @@ class Terminal(FileManager, Buffer):
                     host = session["host"]
                     port = session["port"]
                     if pwd.startswith("-----BEGIN RSA PRIVATE KEY-----"):
-                        with open("asd.key", "w") as f:
+                        with open(f"{self.cur_path}/asd.key", "w") as f:
                             f.write(pwd)
                         os.system("chmod 600 asd.key")
                         return f"ssh -p {port} -i asd.key {user}@{host}"
@@ -247,7 +247,7 @@ class Terminal(FileManager, Buffer):
         curses.curs_set(0)
         with open(file) as f:
             read_file = f.read()
-        with open("data.json", "w") as f:
+        with open(f"{self.cur_path}/data.json", "w") as f:
             f.write(read_file)
         self.load_data()
         self.menu()
