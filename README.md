@@ -1,5 +1,7 @@
 # REME #
 
+#### Currently supports only `Macos`
+
 ## What is this? ##
 The module helps you to store ssh profile and easily connect to them.
 
